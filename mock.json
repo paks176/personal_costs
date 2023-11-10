@@ -1,0 +1,160 @@
+{
+    "data": [
+        {
+            "id": "2",
+            "category": "transport",
+            "date": "02.01.2022",
+            "amount": "150"
+        },
+        {
+            "id": "1",
+            "category": "food",
+            "date": "01.01.2022",
+            "amount": "100"
+        },
+        {
+            "id": "3",
+            "category": "transport",
+            "date": "03.01.2022",
+            "amount": "200"
+        },
+        {
+            "id": "4",
+            "category": "amusement",
+            "date": "04.01.2022",
+            "amount": "110"
+        },
+        {
+            "id": "5",
+            "category": "food",
+            "date": "05.01.2022",
+            "amount": "130"
+        },
+        {
+            "id": "6",
+            "category": "food",
+            "date": "06.01.2022",
+            "amount": "200"
+        },
+        {
+            "id": "7",
+            "category": "food",
+            "date": "07.01.2022",
+            "amount": "100"
+        },
+        {
+            "id": "8",
+            "category": "transport",
+            "date": "08.01.2022",
+            "amount": "150"
+        },
+        {
+            "id": "9",
+            "category": "amusement",
+            "date": "09.01.2022",
+            "amount": "160"
+        },
+        {
+            "id": "10",
+            "category": "transport",
+            "date": "09.01.2022",
+            "amount": "110"
+        },
+        {
+            "id": "11",
+            "category": "amusement",
+            "date": "01.01.2022",
+            "amount": "50"
+        },
+        {
+            "id": "12",
+            "category": "sport",
+            "date": "02.01.2022",
+            "amount": "160"
+        },
+        {
+            "id": "13",
+            "category": "transport",
+            "date": "03.01.2022",
+            "amount": "250"
+        },
+        {
+            "id": "14",
+            "category": "amusement",
+            "date": "04.01.2022",
+            "amount": "110"
+        },
+        {
+            "id": "15",
+            "category": "food",
+            "date": "05.01.2022",
+            "amount": "190"
+        },
+        {
+            "id": "16",
+            "category": "food",
+            "date": "06.01.2022",
+            "amount": "250"
+        },
+        {
+            "id": "17",
+            "category": "food",
+            "date": "07.01.2022",
+            "amount": "600"
+        },
+        {
+            "id": "18",
+            "category": "food",
+            "date": "08.01.2022",
+            "amount": "250"
+        },
+        {
+            "id": "19",
+            "category": "amusement",
+            "date": "09.01.2022",
+            "amount": "260"
+        },
+        {
+            "id": "20",
+            "category": "transport",
+            "date": "09.01.2022",
+            "amount": "130"
+        },
+        {
+            "id": "21",
+            "category": "amusement",
+            "date": "01.01.2022",
+            "amount": "50"
+        },
+        {
+            "id": "22",
+            "category": "sport",
+            "date": "02.01.2022",
+            "amount": "160"
+        },
+        {
+            "id": "23",
+            "category": "transport",
+            "date": "03.01.2022",
+            "amount": "250"
+        },
+        {
+            "id": "24",
+            "category": "amusement",
+            "date": "04.01.2022",
+            "amount": "110"
+        },
+        {
+            "id": "25",
+            "category": "food",
+            "date": "05.01.2022",
+            "amount": "190"
+        },
+        {
+            "id": "26",
+            "category": "food",
+            "date": "06.01.2022",
+            "amount": "250"
+        }
+    ]
+}
