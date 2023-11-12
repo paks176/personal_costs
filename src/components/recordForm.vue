@@ -18,7 +18,7 @@
             </div>
             <div class="mb-2 d-flex justify-content-between">
               <p>Amount</p>
-              <input type="text" v-model="form.formAmount">
+              <input type="text" v-model.number="form.formAmount">
             </div>
             <button class="btn btn-danger" @click="addNewRecord">Create</button>
           </form>
@@ -44,14 +44,21 @@ export default {
   },
   computed: {
       currentDate() {
-        return String(new Date().getUTCDate())
+        let date = new Date();
+        return date.getUTCDate() 
+            + '.' + date.getUTCMonth() 
+            + '.' + date.getUTCFullYear();
       }
     },
   methods: {
     addNewRecord(event) {
       event.preventDefault();
-      this.$set(this.form, 'date', this.currentDate)
-      this.$emit('addNewRecord', this.form)
+      const formData = {
+        date: this.currentDate,
+        category: this.form.formCategory,
+        amount: this.form.formAmount
+      };
+      this.$emit('addNewRecord', formData);
     }
   }
 }

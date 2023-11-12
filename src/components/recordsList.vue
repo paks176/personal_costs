@@ -1,6 +1,7 @@
 <template>
   <div>
     <recordForm @addNewRecord="addNewInTable"/>
+    <listFilters/>
     <table class="w-100">
       <thead>
       <tr>
@@ -23,23 +24,27 @@
 
 <script>
 
-import recordForm from '../components/recordForm.vue'
-import {mapActions, mapGetters} from "vuex";
+import recordForm from '../components/recordForm.vue';
+import listFilters from '../components/listFilters.vue';
+import {mapActions, mapGetters, mapMutations} from "vuex";
 
 export default {
   name: "recordsList",
   components: {
     'recordForm': recordForm,
+    'listFilters': listFilters,
   },
   methods: {
     ...mapActions(['getRecordsList']),
+    ...mapMutations(['addNewInState']),
     toCapitalize(word) {
       const firstLetter = ([...word][0]).toUpperCase();
       const last = [...word].splice(1).join('');
       return firstLetter + last
     },
     addNewInTable(data) {
-      console.log(data)
+      console.log(data);
+      this.addNewInState(data);
     }
   },
   computed: {
