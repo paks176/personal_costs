@@ -1,6 +1,6 @@
 <template>
 <div>
-  <button class="btn btn-primary mb-5" data-bs-toggle="modal" data-bs-target="#addRecordModal">Add new record</button>
+  <button class="btn btn-primary mb-4" data-bs-toggle="modal" data-bs-target="#addRecordModal">Add new record</button>
 
   <div class="modal fade" id="addRecordModal" data-bs-keyboard="true">
     <div class="modal-dialog modal-dialog-centered">

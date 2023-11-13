@@ -13,7 +13,7 @@
       <tbody>
       <tr v-for="item in getRecordsFromState" :key="item.id">
         <td class="table-category">{{toCapitalize(item.category)}}</td>
-        <td>{{item.amount}} p.</td>
+        <td>{{item.amount}} $</td>
         <td class="table-date">{{ item.date }}</td>
       </tr>
       </tbody>
@@ -35,7 +35,7 @@ export default {
     'listFilters': listFilters,
   },
   methods: {
-    ...mapActions(['getRecordsList']),
+    ...mapActions(['getRecordsList', 'processFilters']),
     ...mapMutations(['addNewInState']),
     toCapitalize(word) {
       const firstLetter = ([...word][0]).toUpperCase();
@@ -52,6 +52,7 @@ export default {
   },
   mounted() {
     this.getRecordsList();
+    this.processFilters('test');
   }
 }
 </script>
