@@ -1,28 +1,32 @@
 <template>
   <div class="mb-5">
     <form action="" id="filter-form">
-      <div class="d-flex mb-3">
+      <div class="d-flex justify-content-between mb-3">
         
-        <label for="column_amount" class="me-3">
-          <input class="d-none" name="filter-column" type="radio" id="column_amount" value="amount">
-          <div class="filter-button">
-            Sort by amount
-          </div>
-        </label>
+        <div class="d-flex">
+          <label for="column_amount" class="me-3">
+            <input class="d-none" name="filter-column" type="radio" id="column_amount" value="amount">
+            <div class="filter-button">
+              Sort by amount
+            </div>
+          </label>
 
-        <label for="column_category" class="me-3">
-          <input class="d-none" name="filter-column" type="radio" id="column_category" value="category">
-          <div class="filter-button">
-            Sort by category
-          </div>
-        </label>
+          <label for="column_category" class="me-3">
+            <input class="d-none" name="filter-column" type="radio" id="column_category" value="category">
+            <div class="filter-button">
+              Sort by category
+            </div>
+          </label>
 
-        <label for="column_date" class="me-3">
-          <input class="d-none" name="filter-column" type="radio" id="column_date" value="date">
-          <div class="filter-button">
-            Sort by date
-          </div>
-        </label>
+          <label for="column_date" class="me-3">
+            <input class="d-none" name="filter-column" type="radio" id="column_date" value="date">
+            <div class="filter-button">
+              Sort by date
+            </div>
+          </label>
+        </div>
+        
+        <button class="reset-button" style="" v-if="showResetButton" @click="resetSortingHandler">Reset sorting</button>
         
       </div>
       
@@ -48,8 +52,19 @@ import {mapMutations} from "vuex";
 
 export default {
   name: "listFilters",
+  props: {
+    showReset: {
+      type: Boolean,
+      default: false,
+    }
+  },
+  data() {
+    return {
+      showResetButton: this.showReset,
+    }
+  },
   methods: {
-    ...mapMutations(['makeSort']),
+    ...mapMutations(['makeSort', "resetSorting"]),
     onFormChange() {
       const form = document.querySelector('#filter-form');
       if (form) {
@@ -62,10 +77,16 @@ export default {
                 ? form.querySelector('input[name="filter-order"]:checked').value 
                 : 'increase'
           }
-          this.makeSort(filterMap)
+          this.showResetButton = true;
+          this.makeSort(filterMap);
         })
       }
 
+    },
+    resetSortingHandler(event) {
+      event.preventDefault();
+      this.showResetButton = false;
+      this.resetSorting();
     }
   },
   mounted() {
@@ -82,8 +103,17 @@ export default {
     padding: 6px 12px;
     border-radius: 6px;
     background-color: lightgray;
-    
+    font-weight: 500;
     transition: all 0.3s ease-out;
+  }
+  .reset-button {
+    background-color: orangered;
+    border: none;
+    transition: all 0.3s ease;
+    color: white;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
   }
   label input:checked + .filter-button {
     background-color: rgba(0, 128, 0, 0.99);

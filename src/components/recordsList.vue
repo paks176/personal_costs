@@ -1,7 +1,7 @@
 <template>
   <div>
     <recordForm @addNewRecord="addNewInTable"/>
-    <listFilters/>
+    <listFilters :showReset="false"/>
     <table class="w-100">
       <thead>
       <tr>
@@ -48,7 +48,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getRecordsFromState'])
+    ...mapGetters(['getRecordsFromState']),
   },
   mounted() {
     this.getRecordsList();

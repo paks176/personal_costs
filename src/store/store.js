@@ -6,6 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         data: [],
+        defaultArray: [],
     },
     actions: {
         setCookie(name, value, options = {}) {
@@ -43,6 +44,7 @@ export default new Vuex.Store({
                     data.json()
                         .then(result => {
                             window.test = result;
+                            context.commit('writeDefault', result)
                             context.commit('writeOldRecords', result)
                         })
                 })
@@ -71,6 +73,9 @@ export default new Vuex.Store({
         }
     },
     mutations: {
+        writeDefault(state, list) {
+            state.defaultArray = [...list.data];
+        },
         writeOldRecords(state, list) {
             state.data = list.data;
         },
@@ -139,11 +144,17 @@ export default new Vuex.Store({
                         }
                 }
             })
+        },
+        resetSorting(state) {
+            state.data = [...state.defaultArray];
         }
     },
     getters: {
         getRecordsFromState(state) {
             return state.data;
         },
+        getDefaultList(state) {
+            return state.defaultArray;
+        }
     },
 })
