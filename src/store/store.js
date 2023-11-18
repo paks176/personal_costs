@@ -81,15 +81,62 @@ export default new Vuex.Store({
             state.data.sort(function (a, b) {
                 switch (filterMap.column) {
                     case 'amount':
-                        return Number(a.amount - b.amount);
+                        switch (filterMap.order) {
+                            case 'increase':
+                                return Number(a.amount - b.amount); 
+                            case 'decrease':
+                                return Number(b.amount - a.amount);
+                        }
+                        break;
                     case 'category':
-                        if (a.category < b.category) {
-                            return -1;
+                        switch (filterMap.order) {
+                            case 'increase':
+                                if (a.category < b.category) {
+                                    return -1;
+                                }
+                                if (a.category > b.category) {
+                                    return 1;
+                                }
+                                return 0;
+                            case 'decrease' :
+                                if (a.category < b.category) {
+                                    return 1;
+                                }
+                                if (a.category > b.category) {
+                                    return -1;
+                                }
+                                return 0;
+                                
                         }
-                        if (a.category > b.category) {
-                            return 1;
+                        break;
+                    case 'date':
+                        switch (filterMap.order) {
+                            case 'increase':
+                                {
+                                    const aDate = Date.parse(a.date);
+                                    const bDate = Date.parse(b.date);
+                                    if (aDate < bDate) {
+                                        return -1;
+                                    }
+                                    if (aDate > bDate) {
+                                        return 1;
+                                    }
+                                    return 0;  
+                                }
+                            case 'decrease':
+                                 {
+                                    const aDate = Date.parse(a.date);
+                                    const bDate = Date.parse(b.date);
+                                    if (aDate < bDate) {
+                                        return 1;
+                                    }
+                                    if (aDate > bDate) {
+                                        return -1;
+                                    }
+                                    return 0;
+                                }
+
                         }
-                        return 0;
                 }
             })
         }
