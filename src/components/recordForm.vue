@@ -14,14 +14,15 @@
           <form>
             <div class="mb-2 d-flex justify-content-between">
               <p>Category</p>
-              <input type="text" v-model="form.formCategory">
+              <input type="text" v-model="form.formCategory" id="form-category">
             </div>
             <div class="mb-2 d-flex justify-content-between">
               <p>Amount</p>
-              <input type="text" v-model.number="form.formAmount">
+              <input type="text" v-model.number="form.formAmount" id="form-amount">
             </div>
             <button class="btn btn-danger" @click="addNewRecord">Create</button>
           </form>
+          <div class="form-warning" v-show="showWarning">Please, fill the "{{emptyField}}" filed</div>
         </div>
       </div>
     </div>
@@ -31,6 +32,9 @@
 </template>
 
 <script>
+
+import {Modal} from 'bootstrap';
+
 export default {
   name: "recordForm",
   data() {
@@ -39,7 +43,10 @@ export default {
         formCategory: '',
         formAmount: '',
       },
-      
+      formModal: '',
+      showWarning: false,
+      emptyField: '',
+      modalIsShown: '',
     }
   },
   computed: {
@@ -48,7 +55,7 @@ export default {
         return date.getUTCDate() 
             + '.' + date.getUTCMonth() 
             + '.' + date.getUTCFullYear();
-      }
+      },
     },
   methods: {
     addNewRecord(event) {
@@ -58,12 +65,45 @@ export default {
         category: this.form.formCategory,
         amount: this.form.formAmount
       };
-      this.$emit('addNewRecord', formData);
+      console.log(formData.category)
+      console.log(formData.amount)
+      if (formData.category === '' || formData.amount === '') {
+        if (formData.category === '') {
+            this.inputCategory.classList.add('warning');
+            this.showWarning = true;
+        }
+        if (formData.amount === '') {
+          this.inputAmount.classList.add('warning');
+          this.showWarning = true;
+        }
+      } else {
+        this.inputCategory.classList.remove('warning');
+        this.inputAmount.classList.remove('warning');
+        this.showWarning = false;
+        this.$emit('addNewRecord', formData);
+        this.formModal.hide();
+      }
+    },
+  },
+  mounted() {
+    this.inputCategory = document.querySelector('#form-category');
+    this.inputAmount = document.querySelector('#form-amount');
+    this.formModal = Modal.getOrCreateInstance(document.getElementById('addRecordModal'));
+    this.modalIsShown = this.formModal._isShown;
+    if (this.modalIsShown === false) {
+      this.inputCategory.classList.remove('warning');
+      this.inputAmount.classList.remove('warning');
+      this.showWarning = false;
     }
   }
 }
 </script>
 
 <style scoped>
-
+  input {
+    transition: all 0.3s ease;
+  }
+  input.warning {
+    outline: 4px solid rgba(139, 0, 0, 0.99);
+  }
 </style>

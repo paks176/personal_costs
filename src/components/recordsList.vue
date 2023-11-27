@@ -43,7 +43,6 @@ export default {
       return firstLetter + last
     },
     addNewInTable(data) {
-      console.log(data);
       this.addNewInState(data);
     }
   },
@@ -51,8 +50,7 @@ export default {
     ...mapGetters(['getRecordsFromState']),
   },
   mounted() {
-    this.getRecordsList();
-    this.processFilters('test');
+    this.getRecordsList()
   }
 }
 </script>

@@ -9,67 +9,53 @@ export default new Vuex.Store({
         defaultArray: [],
     },
     actions: {
-        setCookie(name, value, options = {}) {
-        
-            options = {
-                path: '/',
-                ...options  
-            };
-        
-            let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
-        
-            for (let optionKey in options) {
-                updatedCookie += "; " + optionKey;
-                let optionValue = options[optionKey];
-                if (optionValue !== true) {
-                    updatedCookie += "=" + optionValue;
-                }
+        async setCookie(state, filterMap) {
+            function mapCookie(filterMap) {
+                let resultString = '';
+                resultString += filterMap.column ? ('column_' + filterMap.column + '/') : 'column_none/';
+                resultString += filterMap.order ? ('order_' + filterMap.order) : 'order_increase';
+                return resultString;
             }
-            document.cookie = updatedCookie;
+            document.cookie = 'personalCostsFilters' + '=' + mapCookie(filterMap);
         },
 
-        getCookie(state, arg) {
-            console.log(arg)
-            console.log('Action getCookie: ' + arg)
-            let matches = document.cookie.match(new RegExp(
-                "(?:^|; )" + name.replace(/([.$?*|{}()[\]\\/+^])/g, '\\$1') + "=([^;]*)"
-            ));
-
-            return matches ? decodeURIComponent(matches[1]) : undefined;
+        async getCookie() {
+            let matches = document.cookie.match('personalCostsFilters');
+            return matches ? decodeURIComponent(matches.input) : undefined;
         },
         
-        getRecordsList(context) {
+        async getRecordsList(context) {
             fetch('https://run.mocky.io/v3/95abb8d5-3ee5-49df-9c49-07d91a6852b2')
                 .then(data => {
                     data.json()
                         .then(result => {
-                            window.test = result;
                             context.commit('writeDefault', result)
                             context.commit('writeOldRecords', result)
+                        })
+                        .then(function() {
+                            context.dispatch('processFilters')
                         })
                 })
         },
         
-        processFilters(context, arg) {
-            console.log('Action processFilters: '+ arg);
-            context.dispatch('getCookie', arg)
-                .then(result => function() {
+        processFilters(context) {
+            context.dispatch('getCookie')
+                .then(result => {
                     if (result) {
-                        console.log(result);
-                    } else {
-                        let filterMap = [];
-                        const filterSteps = result.split('/');
-                        filterSteps.forEach(element => {
-                            const steps = element.split('_')
-                            let resultObj = {
-                                column: steps[0],
-                                order: steps[1]
-                            };
-                            filterMap.push(resultObj)
+                        // apply filters
+                        const filterSteps = result.split('=')[1].split('/');
+                        context.commit('makeSort', {
+                            column: filterSteps[0].split('_')[1],
+                            order: filterSteps[1].split('_')[1],
                         })
+                    } else {
+                        context.dispatch('setCookie', {column: 'none', order: 'increase'})
+                            .then(function() {
+                                console.warn('The Project cookie is set to default')
+                            }
+                        )
                     }
                 })
-            
         }
     },
     mutations: {
@@ -143,7 +129,9 @@ export default new Vuex.Store({
 
                         }
                 }
-            })
+            });
+            
+            this.dispatch('setCookie', filterMap);
         },
         resetSorting(state) {
             state.data = [...state.defaultArray];
