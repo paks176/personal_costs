@@ -7,6 +7,7 @@ export default new Vuex.Store({
     state: {
         data: [],
         defaultArray: [],
+        cookieFilterMap: {},
     },
     actions: {
         async setCookie(state, filterMap) {
@@ -14,6 +15,7 @@ export default new Vuex.Store({
                 let resultString = '';
                 resultString += filterMap.column ? ('column_' + filterMap.column + '/') : 'column_none/';
                 resultString += filterMap.order ? ('order_' + filterMap.order) : 'order_increase';
+                resultString += ';'
                 return resultString;
             }
             document.cookie = 'personalCostsFilters' + '=' + mapCookie(filterMap);
@@ -44,14 +46,18 @@ export default new Vuex.Store({
                     if (result) {
                         // apply filters
                         const filterSteps = result.split('=')[1].split('/');
-                        context.commit('makeSort', {
+                        let resultFilterMap = {
                             column: filterSteps[0].split('_')[1],
                             order: filterSteps[1].split('_')[1],
-                        })
+                        }
+                   
+                        context.commit('makeSort', resultFilterMap);
+                        context.commit('changeFilterMap', resultFilterMap)
                     } else {
+                        // default filters
                         context.dispatch('setCookie', {column: 'none', order: 'increase'})
                             .then(function() {
-                                console.warn('The Project cookie is set to default')
+                                console.warn('The Project cookie is set to default');
                             }
                         )
                     }
@@ -132,9 +138,15 @@ export default new Vuex.Store({
             });
             
             this.dispatch('setCookie', filterMap);
+            
         },
+        
         resetSorting(state) {
             state.data = [...state.defaultArray];
+        },
+        
+        changeFilterMap(state, map) {
+            state.cookieFilterMap = map 
         }
     },
     getters: {
@@ -143,6 +155,9 @@ export default new Vuex.Store({
         },
         getDefaultList(state) {
             return state.defaultArray;
+        },
+        getCookieFilterMap(state) {
+            return state.cookieFilterMap;
         }
     },
 })

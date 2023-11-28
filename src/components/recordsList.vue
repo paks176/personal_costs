@@ -34,6 +34,11 @@ export default {
     'recordForm': recordForm,
     'listFilters': listFilters,
   },
+  data() {
+    return {
+      filterMap: '',
+    }
+  },
   methods: {
     ...mapActions(['getRecordsList', 'processFilters']),
     ...mapMutations(['addNewInState']),
@@ -48,6 +53,7 @@ export default {
   },
   computed: {
     ...mapGetters(['getRecordsFromState']),
+    ...mapGetters(['getCookieFilterMap'])
   },
   mounted() {
     this.getRecordsList()
