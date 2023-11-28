@@ -143,6 +143,11 @@ export default new Vuex.Store({
         
         resetSorting(state) {
             state.data = [...state.defaultArray];
+            this.dispatch('setCookie', {column: 'none', order: 'increase'})
+                .then(function() {
+                        console.warn('The Project cookie is set to default');
+                    }
+                )
         },
         
         changeFilterMap(state, map) {
