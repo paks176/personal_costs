@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h2 class="mb-5 mt-4">Personal costs records</h2>
     <recordForm @addNewRecord="addNewInTable"/>
     <listFilters :showReset="false"/>
     <table class="w-100">
