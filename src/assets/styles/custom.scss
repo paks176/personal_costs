@@ -1,0 +1,59 @@
+/* error toasts */
+.toast-container {
+  position: fixed;
+  right: 1rem;
+  top: 55px;
+  pointer-events: none;
+  z-index: 1000;
+  width: 100%;
+  max-width: 580px;
+}
+.toast {
+  height: 0;
+  width: 100%;
+  background-color: unset;
+  border: none;
+  border-radius: 0;
+}
+.toast-wrapper {
+  background-color: #FFFFFF;
+  border-left: 4px solid;
+  box-shadow: 0 10px 15px -3px rgba(41, 41, 64, 0.08), 0 4px 6px -2px rgba(41, 41, 64, 0.04);
+}
+.error-toast-header {
+  color: #101025;
+  font-size: 14px;
+  line-height: 24px;
+}
+.toast.info .mes-button {
+  background-color: #4C6EF5;
+}
+.toast.info .toast-wrapper {
+  border-left-color: #4C6EF5;
+}
+.toast.warning .mes-button {
+  background-color: #FD7E14;
+}
+.toast.warning .toast-wrapper {
+  border-left-color: #FD7E14;
+}
+.toast.critical .mes-button {
+  background-color: #FA5252;
+}
+.toast.critical .toast-wrapper {
+  border-left-color: #FA5252;
+}
+.toast.succeed .mes-button {
+  background-color: #40C057;
+}
+.toast.succeed .toast-wrapper {
+  border-left-color: #40C057;
+}
+.toast .mes-button:hover {
+  opacity: 0.8;
+}
+.toast-wrapper .rate-instruct-cancel {
+  height: auto !important;
+}
+
+/*  */

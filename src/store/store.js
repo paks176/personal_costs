@@ -8,6 +8,13 @@ export default new Vuex.Store({
         data: [],
         defaultArray: [],
         cookieFilterMap: {},
+        errorsStack: [
+            {
+                type: 'warning',
+                header: 'Не удалось определить вашу роль',
+                text: 'Мы не смогли определить вашу роль в Справке, вы можете дальше пользоваться справкой. Для более корректного отображения информации, рекомендуем войти заново.',
+            },
+        ],
     },
     actions: {
         async setCookie(state, filterMap) {
@@ -163,6 +170,9 @@ export default new Vuex.Store({
         },
         getCookieFilterMap(state) {
             return state.cookieFilterMap;
-        }
+        },
+        getErrorsStack(state) {
+          return state.errorsStack;  
+        },
     },
 })

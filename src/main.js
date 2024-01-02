@@ -7,7 +7,11 @@ import router from './router/index'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 //import custom styles
-// require('@/assets/styles/custom.scss')
+require('@/assets/styles/custom.scss')
+
+// plugins
+import Toast from './plugins/toasts';
+Vue.use(Toast)
 
 new Vue({
   store: Store,
