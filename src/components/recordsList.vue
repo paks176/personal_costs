@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     ...mapActions(['getRecordsList', 'processFilters']),
-    ...mapMutations(['addNewInState']),
+    ...mapMutations(['addNewInState', 'pushNewToast']),
     toCapitalize(word) {
       const firstLetter = ([...word][0]).toUpperCase();
       const last = [...word].splice(1).join('');
@@ -57,7 +57,7 @@ export default {
     ...mapGetters(['getCookieFilterMap'])
   },
   mounted() {
-    this.getRecordsList()
+    this.getRecordsList();
   }
 }
 </script>

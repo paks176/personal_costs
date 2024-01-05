@@ -56,4 +56,20 @@
   height: auto !important;
 }
 
-/*  */
+/* useful classes */
+
+.opacity-0 {
+  opacity: 0 !important;
+}
+.ease-animation {
+  transition: all 0.3s ease-in !important;
+}
+.ease-opacity {
+  transition: opacity 0.3s ease-in !important;
+}
+.rounded-8 {
+  border-radius: 8px !important;
+}
+.fw-up-medium {
+  font-weight: 600 !important;
+}

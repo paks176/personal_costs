@@ -13,7 +13,7 @@
       </li>
     </ul>
     
-    <div class="toast-container"></div>
+    <div class="toast-container ease-animation"></div>
     <div class="container pt-3">
       <router-view></router-view>
     </div>
@@ -22,20 +22,19 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
 export default {
   name: 'App',
   components: {},
-  data() {
-    return {
-      errorsStack: '',
-    }
+  computed: {
+    ...mapGetters(['getErrorsStack']),
   },
   mounted() {
-    this.$toast.processAll();
+
   },
   watch: {
-    errorsStack() {
-      
+    getErrorsStack() {
+      this.$toast.processNew(this.getErrorsStack[0])
     }
   }
 }

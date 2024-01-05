@@ -72,7 +72,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['makeSort', 'resetSorting']),
+    ...mapMutations(['makeSort', 'resetSorting', "pushNewToast"]),
     onFormChange() {
       const form = document.querySelector('#filter-form');
       if (form) {
@@ -102,6 +102,11 @@ export default {
       this.filtersInputs.orderIncrease.checked = true;
     },
     applyFilters(filterMap) {
+      this.pushNewToast({
+        type: 'info',
+        header: 'Sorting settings found',
+        text: `Sorting is set by previous setting: by column - <b>${filterMap.column}</b>, by order - <b>${filterMap.order}</b>`,
+      })
       switch (filterMap.column) {
         case 'amount':
           this.filtersInputs.columnAmount.checked = true;

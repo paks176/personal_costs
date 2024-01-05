@@ -8,13 +8,7 @@ export default new Vuex.Store({
         data: [],
         defaultArray: [],
         cookieFilterMap: {},
-        errorsStack: [
-            {
-                type: 'warning',
-                header: 'Не удалось определить вашу роль',
-                text: 'Мы не смогли определить вашу роль в Справке, вы можете дальше пользоваться справкой. Для более корректного отображения информации, рекомендуем войти заново.',
-            },
-        ],
+        errorsStack: [],
     },
     actions: {
         async setCookie(state, filterMap) {
@@ -25,6 +19,7 @@ export default new Vuex.Store({
                 resultString += ';'
                 return resultString;
             }
+
             document.cookie = 'personalCostsFilters' + '=' + mapCookie(filterMap);
         },
 
@@ -32,7 +27,7 @@ export default new Vuex.Store({
             let matches = document.cookie.match('personalCostsFilters');
             return matches ? decodeURIComponent(matches.input) : undefined;
         },
-        
+
         async getRecordsList(context) {
             fetch('https://run.mocky.io/v3/95abb8d5-3ee5-49df-9c49-07d91a6852b2')
                 .then(data => {
@@ -41,12 +36,24 @@ export default new Vuex.Store({
                             context.commit('writeDefault', result)
                             context.commit('writeOldRecords', result)
                         })
-                        .then(function() {
-                            context.dispatch('processFilters')
+                        .then(function () {
+                            context.dispatch('processFilters');
+                            context.commit('pushNewToast', {
+                                type: 'succeed',
+                                header: 'Records list successfully loaded',
+                            })
                         })
                 })
+                .catch(function() {
+                    console.log('fetch failed')
+                    context.commit('pushNewToast', {
+                        type: 'critical',
+                        header: 'Failed to load the Records list',
+                        text: 'Perhaps mock server is not available or the list is erased from the server',
+                    })
+                })
         },
-        
+
         processFilters(context) {
             context.dispatch('getCookie')
                 .then(result => {
@@ -57,16 +64,16 @@ export default new Vuex.Store({
                             column: filterSteps[0].split('_')[1],
                             order: filterSteps[1].split('_')[1],
                         }
-                   
+
                         context.commit('makeSort', resultFilterMap);
                         context.commit('changeFilterMap', resultFilterMap)
                     } else {
                         // default filters
                         context.dispatch('setCookie', {column: 'none', order: 'increase'})
-                            .then(function() {
-                                console.warn('The Project cookie is set to default');
-                            }
-                        )
+                            .then(function () {
+                                    console.warn('The Project cookie is set to default');
+                                }
+                            )
                     }
                 })
         }
@@ -75,19 +82,22 @@ export default new Vuex.Store({
         writeDefault(state, list) {
             state.defaultArray = [...list.data];
         },
+
         writeOldRecords(state, list) {
             state.data = list.data;
         },
+
         addNewInState(state, record) {
             state.data.push(record)
         },
+
         makeSort(state, filterMap) {
             state.data.sort(function (a, b) {
                 switch (filterMap.column) {
                     case 'amount':
                         switch (filterMap.order) {
                             case 'increase':
-                                return Number(a.amount - b.amount); 
+                                return Number(a.amount - b.amount);
                             case 'decrease':
                                 return Number(b.amount - a.amount);
                         }
@@ -110,55 +120,57 @@ export default new Vuex.Store({
                                     return -1;
                                 }
                                 return 0;
-                                
+
                         }
                         break;
                     case 'date':
                         switch (filterMap.order) {
-                            case 'increase':
-                                {
-                                    const aDate = Date.parse(a.date);
-                                    const bDate = Date.parse(b.date);
-                                    if (aDate < bDate) {
-                                        return -1;
-                                    }
-                                    if (aDate > bDate) {
-                                        return 1;
-                                    }
-                                    return 0;  
+                            case 'increase': {
+                                const aDate = Date.parse(a.date);
+                                const bDate = Date.parse(b.date);
+                                if (aDate < bDate) {
+                                    return -1;
                                 }
-                            case 'decrease':
-                                 {
-                                    const aDate = Date.parse(a.date);
-                                    const bDate = Date.parse(b.date);
-                                    if (aDate < bDate) {
-                                        return 1;
-                                    }
-                                    if (aDate > bDate) {
-                                        return -1;
-                                    }
-                                    return 0;
+                                if (aDate > bDate) {
+                                    return 1;
                                 }
+                                return 0;
+                            }
+                            case 'decrease': {
+                                const aDate = Date.parse(a.date);
+                                const bDate = Date.parse(b.date);
+                                if (aDate < bDate) {
+                                    return 1;
+                                }
+                                if (aDate > bDate) {
+                                    return -1;
+                                }
+                                return 0;
+                            }
 
                         }
                 }
             });
-            
+
             this.dispatch('setCookie', filterMap);
-            
+
         },
-        
+
         resetSorting(state) {
             state.data = [...state.defaultArray];
             this.dispatch('setCookie', {column: 'none', order: 'increase'})
-                .then(function() {
+                .then(function () {
                         console.warn('The Project cookie is set to default');
                     }
                 )
         },
-        
+
         changeFilterMap(state, map) {
-            state.cookieFilterMap = map 
+            state.cookieFilterMap = map;
+        },
+
+        pushNewToast(state, toast) {
+            state.errorsStack.unshift(toast)
         }
     },
     getters: {
@@ -172,7 +184,7 @@ export default new Vuex.Store({
             return state.cookieFilterMap;
         },
         getErrorsStack(state) {
-          return state.errorsStack;  
+            return state.errorsStack;
         },
     },
 })
