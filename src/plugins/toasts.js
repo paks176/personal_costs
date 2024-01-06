@@ -3,6 +3,7 @@ import Store from '@/store/store';
 export default {
     install(Vue) {
         Vue.prototype.$toast = {
+            toastQueue: Number(0),
             container: undefined,
             class: class ErrorToast {
                 constructor(options) {
@@ -88,59 +89,37 @@ export default {
                     }
                 }
 
-                // checkErrorCookie(toastId, shows) {
-                //    
-                //     const messagesCookie =
-                //         document
-                //             .cookie.split('; ')
-                //             .find((element) => element.startsWith('messages'));
-                //     if (!messagesCookie) {
-                //         this.setErrorCookie(toastId);
-                //         return true;
-                //     } else {
-                //         const toasts = messagesCookie.split('=')[1];
-                //         if (!toasts) {
-                //             this.setErrorCookie(toastId);
-                //             return true;
-                //         } else {
-                //             const thisToast = toasts.split(',').find((toast) => toast.split('(')[0] === toastId);
-                //             if (thisToast) {
-                //                 const thisShows = Number([...thisToast].splice(-3)[1]);
-                //                 if (shows !== null) {
-                //                     if (thisShows <= shows) {
-                //                         this.setErrorCookie(toastId, (thisShows + 1));
-                //                     } else return false;
-                //                     return true;
-                //                 }
-                //                
-                //             } else return false;
-                //         }
-                //     }
-                // }
-
-                // setErrorCookie(toastId, shows) {
-                //     // eslint-disable-next-line no-debugger
-                //     debugger
-                //     const errorsCookie = document
-                //         .cookie.split('; ')
-                //         .find((element) => element.startsWith('messages'));
-                //     let resultString = errorsCookie ? '' : 'messages=';
-                //     const cookieShows = shows || 1
-                //     document.cookie = resultString + toastId + "(" + cookieShows + ")";
-                // }
-
                 showToast() {
-                    // if (this.checkErrorCookie(this.toastId, this.shows)) {
-                    this.DOMElement.classList.add('show');
-                    this.DOMElement.style.height = this.DOMElement.querySelector('.toast-wrapper').scrollHeight + 'px';
-                    setTimeout(() => {
-                        this.container.style.pointerEvents = 'auto';
-                        this.DOMElement.classList.remove('opacity-0');
-                    }, 350)
-                    //}
-                    setTimeout(() => {
-                        this.hideToast(this.DOMElement);
-                    }, 5000)
+                    
+                    if (Vue.prototype.$toast.toastQueue === 0) {
+                        setTimeout(() => {
+                                this.DOMElement.classList.add('show');
+                                this.DOMElement.style.height = this.DOMElement.querySelector('.toast-wrapper').scrollHeight + 'px';
+                                setTimeout(() => {
+                                    this.container.style.pointerEvents = 'auto';
+                                    this.DOMElement.classList.remove('opacity-0');
+                                }, 350)
+                                setTimeout(() => {
+                                    this.hideToast(this.DOMElement);
+                                }, 5000)
+                            },
+                            (Vue.prototype.$toast.toastQueue * 1000))
+                        Vue.prototype.$toast.toastQueue += 1;
+                    } else {
+                        Vue.prototype.$toast.toastQueue += 1;
+                        setTimeout(() => {
+                                this.DOMElement.classList.add('show');
+                                this.DOMElement.style.height = this.DOMElement.querySelector('.toast-wrapper').scrollHeight + 'px';
+                                setTimeout(() => {
+                                    this.container.style.pointerEvents = 'auto';
+                                    this.DOMElement.classList.remove('opacity-0');
+                                }, 350)
+                                setTimeout(() => {
+                                    this.hideToast(this.DOMElement);
+                                }, 5000)
+                            },
+                            (Vue.prototype.$toast.toastQueue * 1000))
+                    }
                 }
 
                 hideToast(DOMElement) {
@@ -162,14 +141,14 @@ export default {
                 const errorsStack = Store.getters.getErrorsStack;
                 if (errorsStack.length > 0) {
                     let i = 0;
-                    let queue;
+                    let queue = undefined;
                     processToast(i);
 
                     // eslint-disable-next-line no-inner-declarations
                     function processToast(i) {
                         if (errorsStack[i]) {
                             queue = new Promise(resolve => {
-                                setTimeout(() => {
+                                window.toastTimeOut = setTimeout(() => {
                                     errorsStack[i].toastId = 'error-toast-' + (i + 1);
                                     const thisClass = Vue.prototype.$toast.class;
                                     const newToast = new thisClass(errorsStack[i]);
@@ -180,7 +159,7 @@ export default {
                             queue.then(() => {
                                 if (i <= errorsStack.length) {
                                     i++;
-                                    processToast(i)
+                                    processToast(i);
                                 }
                             })
                         }
@@ -194,7 +173,11 @@ export default {
             },
             
             processNew(toast) {
-                new Vue.prototype.$toast.class(toast)
+                if (window.queue) {
+                    window.queue.then(function() { new Vue.prototype.$toast.class(toast)})
+                } else {
+                    new Vue.prototype.$toast.class(toast)
+                }
             },
             
             mounted() {
