@@ -16,9 +16,9 @@
       
     </div>
     <div class="d-flex justify-content-between">
-      <div>
+      <transition name="fade">
         <component :is="testComponent" @component-message="showComponentMessage"></component>
-      </div>
+      </transition>
       
       <div class="border border-info-subtle p-3" id="messagePlace">
         
@@ -88,5 +88,12 @@ export default {
   width: 20px;
   height: 20px;
   border-radius: 50%;
+}
+.fade-enter-active, .fade-leave-active {
+  display: block;
+  transition: opacity .3s;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
 }
 </style>
